@@ -31,7 +31,7 @@ d. audio transmit
    2. For UART + PCM bluetooth
       In this mode, audio data (sco) transmit through PCM, audio data send/receive in PCM driver, the BT chipset send it out.  
       We just need to read/write PCM driver data after sco socket connected.
-      For embed system , this mode is easier, user only need to implement the alsa pcm driver, and can user snd functions to send/receive audio.
+      For embed system , this mode is easier, user only need to implement the alsa pcm driver, and can use ALSA APIs snd to send/receive audio In user space.
 
 Actually, Bluez have beed done all of that in the code, if you enable audio, then you can send dbus message to do that.
 Sometimes, we don't want to use the audio system in bluez, it's huge and hard to understand for newers.
