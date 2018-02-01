@@ -6,7 +6,7 @@
 Before read this file ,we recommend you read the PDF files outside of this folder.
 If you have known the basic concept of bluez sco arch and flow, just ignore that.
 
-After the pairing have beed successfully done. We can start learn the HSP/HFP gateway profile and eatablish audio flow
+After the pairing have beed successfully done. We can start to learn the HSP/HFP gateway profile and eatablish audio flow
 between audio gateway and headset.
 Note: Audio gateway ~= Smart phone 
 
