@@ -26,7 +26,7 @@ b. Run dbus and bluetooth daemon application on embed system
       /*start the debus daemon*/
       dbus-daemon --system
       /*start the bluez daemon.*/
-      bluetoothd -n -d &
+      bluetoothd 
       
   2. For UART + PCM bluetooth adaptor
       /*export the path environment*/
@@ -49,7 +49,7 @@ b. Run dbus and bluetooth daemon application on embed system
       /*start the debus daemon*/
       dbus-daemon --system
       /*start the bluez daemon.*/
-      bluetoothd -n -d &
+      bluetoothd 
       
 c. Now, run 'hciconfig' to make sure the bluetooth can be correctly found
       1. hciconfig -a
