@@ -1,0 +1,38 @@
+/*
+*This file decribe the audio flow in bluez.
+*Only for headset/handfree audio, not include A2DP source/sink
+*/
+
+Before read this file ,we recommend you read the PDF files outside of this folder.
+If you have known the basic concept of bluez sco arch and flow, just ignore that.
+
+After the pairing have beed successfully done. We can start learn the HSP/HFP gateway profile and eatablish audio flow
+between audio gateway and headset.
+Note: Audio gateway ~= Smart phone 
+
+a. query the RFCOMM channel on the headset.
+    Use the cmd 'sdptool browse <bdaddr>', you can query all the sdp info of the headset.
+    
+b. connect the RFCOMM channel to the headset.
+    If rfcomm socket connect done, we need to listen this socket and init the AT COMMAND interactive with headset.
+    Where is the AT command spec ? download 'HFP_SPEC_V16.pdf' and test with some BT headset.
+c. connect sco to the headset
+    After the RFCOMM init done, if we want to make calls through headset, we can double click headset botton, it will send a "Redial ATc cmd"
+    Out Audio gateway should do the correct operation to make a last dial call, and connect sco socket to headset.
+    
+    Note: sco connect need to be established while a call established.
+d. audio transmit
+   
+   1. For USB dongle bluetooth
+      In this mode, audio data (sco) transmit through USB, and it will send/receive in 'hci_usb.c', then send to the sco socket.
+      So we need to read/write the sco scoket.
+      We should create a thread to read pcm data from audio codec and send to sco socket, receive data from sco socket and send to audio codec 
+   
+   2. For UART + PCM bluetooth
+      In this mode, audio data (sco) transmit through PCM, audio data send/receive in PCM driver, the BT headset send out.  
+      We just need to read/write PCM driver data after sco socket connected.
+      For embed system , this mode is easier, user only need to implement the alsa pcm driver, and can user snd functions to send/receive audio.
+
+Actually, Bluez have beed done all of that in the code, if you enable audio, then you can send dbus message to do that.
+Sometimes, we don't want to use the audio system in bluez, it's huge and hard to understand for newers.
+So, we can write C source code to implement the a/b/c steps
