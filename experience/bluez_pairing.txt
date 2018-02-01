@@ -1,0 +1,40 @@
+/*
+* This file will show the different pairing mode in bluetooth.
+* And I will use the 'agent' command to connect remote headset.
+*/
+
+a. Actually, bluez4.95 offer a lot of test tools for user, and 'agent' must be the special one.
+   In bluez4.95/test ,there are two files named 'agent.c' and 'simple_agent'.
+   They do the sames things , but one is wrote with C lang, the other one use Python. 
+   This is important for us to understand the other python script, and translate them into C.
+   Note: Most of the test tools which need to use dbus system are wrote in Python. 
+   
+b. First, let's try to connect to remote device
+   1. 'hcitool scan' to find remote device
+      Scanning ...
+        F0:6D:78:31:66:16	OPPO R11s
+        90:C7:D8:1C:0F:26	NX529J
+        DC:F0:90:16:A0:7D	nubia Z17mini
+   2. agent -a hci0 0000 F0:6D:78:31:66:16
+        This cmd is try to connect the remote device 'F0:6D:78:31:66:16'
+   3. agent -a hci0 0000 &
+        This cmd is listening and waiting for other device come in.
+        Note: Usually, our device can't be scaned by other device, use cmd 'hciconfig hci0 piscan' to enable it.
+        For more details about 'piscan' , read the file 'bluetooth_essentials_for_programmers.4272206415.pdf'
+   Extension:
+        'hcitool cc <bdaddr>' also can pair with remore device, but is seems not support "DisplayYesOrNo" mode. (Not sure yet :))
+
+c. What does the agent do ?
+   1. For connect to remote device, it call the method 'CreatePairedDevice' in "org.bluez.Adapter", and waiting for the dbus message
+   to notify the UI layer that weather need 'RequestPinCode' or 'RequestConfirmation' and others.
+   
+   2. For waiting for remote device ,it call the method 'RegisterAgent' in "org.bluez.Adapter", and waiting for the dbus message
+   to notify the UI layer that weather need 'RequestPinCode' or 'RequestConfirmation' and others.
+   
+   Note: all message are transferred in dbus system ,no matter about ' method called ' or 'state changed', so understand dbus message transmit
+   is essential.
+   If two device have beed paired, when the remote device power off and the power on ,bluez can auto connect it.
+
+d. Question: what does 'CreatePairedDevice' and 'RegisterAgent' do ?
+   Answer: Just read the source code. :)
+           I can tell you, at the last ,they all call hci ioctls to interacted with kernel.
