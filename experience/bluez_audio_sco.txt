@@ -15,7 +15,7 @@ a. query the RFCOMM channel on the headset.
     
 b. connect the RFCOMM channel to the headset.
     If rfcomm socket connect done, we need to listen this socket and init the AT COMMAND interactive with headset.
-    Where is the AT command spec ? download 'HFP_SPEC_V16.pdf' and test with some BT headset.
+    Where is the AT command spec ? download 'HFP_SPEC_V16.pdf' and test with a BT headset.
 c. connect sco to the headset
     After the RFCOMM init done, if we want to make calls through headset, we can double click headset botton, it will send a 
     "Redial AT cmd",Our Audio gateway should do the correct operation to make the last dial call, and connect sco socket to headset.
