@@ -29,7 +29,7 @@ d. audio transmit
       We should create a thread to read pcm data from audio codec and send to sco socket, receive data from sco socket and send to audio codec 
    
    2. For UART + PCM bluetooth
-      In this mode, audio data (sco) transmit through PCM, audio data send/receive in PCM driver, the BT headset send out.  
+      In this mode, audio data (sco) transmit through PCM, audio data send/receive in PCM driver, the BT chipset send it out.  
       We just need to read/write PCM driver data after sco socket connected.
       For embed system , this mode is easier, user only need to implement the alsa pcm driver, and can user snd functions to send/receive audio.
 
