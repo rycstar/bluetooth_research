@@ -11,7 +11,7 @@ Parpare:
 	* make
 	* sudo make install
 2)Compile dbus-1.5.12.tar.gz
-    * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux --with-x=no CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib
+        * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux --with-x=no CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib
 	* make
 	* sudo make install
 3)Compile glib-2.24.0.tar.gz
@@ -22,17 +22,17 @@ Parpare:
         *******zlib don't support indicate cross compile tool through "--host CC" etc,we must modify the Makefile to support cross compile*******
 	Edit the makefile and prefix the build tools with arm-linux-gnueabi-.
 		CC=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-gcc
-		LDSHARED=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-gcc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map
-		CPP=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-gcc -E
-		AR=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-ar
-		RANLIB=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-ranlib
+		LDSHARED=/opt/*/arm-none-linux-gnueabi-gcc -shared -Wl,-soname,libz.so.1,--version-script,zlib.map
+		CPP=/opt/*/arm-none-linux-gnueabi-gcc -E
+		AR=/opt/*/arm-none-linux-gnueabi-ar
+		RANLIB=/opt/*/arm-none-linux-gnueabi-ranlib
 	* make
 	* sudo make install
 
    3-2) compile glib-2.24.0.tar.gz    
         * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux NM=/opt/arm-2009q1/bin/arm-none-linux-gnueabi-nm CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib glib_cv_stack_grows=no glib_cv_uscore=no glib_cv_have_qsort_r=yes ac_cv_func_posix_getpwuid_r=yes ac_cv_func_posix_getgrgid_r=yes	
 	*****maybe you will encounter a 'gettext' error
-        Solution:
+        	Solution:
 			sudo apt-get install gettext
 	*****A config error maybe coming:
 		"configure: error: Could not find a glib-genmarshal in your PATH"
@@ -40,8 +40,8 @@ Parpare:
 			sudo apt-get install libglib2.0-dev
 4) Compile bluez-4.95
     export PKG_CONFIG_LIBDIR=$BLUEZ_INSTALL_PATH/lib/pkgconfig
-	* ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib --enable-test
-	* make
+    * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib --enable-test
+    * make
     * sudo make install
     Note: we can use --disable-audio --enable-test to open or close some features in bluez4.95. For more details , see the configure in bluez4.95
 
