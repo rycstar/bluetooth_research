@@ -3,7 +3,7 @@
 Parpare:
 * sudo mkdir /usr/bluez4.95
 * export BLUEZ_INSTALL_PATH="/usr/bluez4.95"
-* export CROSS_CC_PATH="/opt/arm-2009q1/bin/arm-none-linux-gnueabi-gcc"
+* export CROSS_CC_PATH="/opt/*/arm-*-linux-gnueabi-gcc" /*the cross compile path*/
 1)Compile expat-2.0.1.tar.gz
 	* tar -zxvf expat-2.0.1.tar.gz -C ./
 	* cd ./expat-2.0.1.tar.gz
