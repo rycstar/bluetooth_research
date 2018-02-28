@@ -1,0 +1,13 @@
+a. run bluetoothd without backgorund mode and enable debug option
+   cmd: bluetoothd -n -d &
+   In this cmd, you can see the logs in your console. If you want to add or delete some logs in bluez source code,
+   you can add 'printf' to trace the code. Notice, only in '-n -d' mode, you can see the changes, or you can't see anything
+   
+   In the same way, obexd,obex-client should also run in '-n -d' mode if you want to debug for it.
+   
+b. hcidump
+   hcidump is the most important tool for bluetooth issue analysis.
+   It can capture all the bluetooth packet that we received and sent.
+   Sometimes we can check the packets we send whether it's correct according to the BLUETOOTH SPEC
+   The usage of hcidump is also simple:
+        hcidump  –w <filename> &
