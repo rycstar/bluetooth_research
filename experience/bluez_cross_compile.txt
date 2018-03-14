@@ -40,7 +40,7 @@ Parpare:
 			sudo apt-get install libglib2.0-dev
 4) Compile bluez-4.95
     export PKG_CONFIG_LIBDIR=$BLUEZ_INSTALL_PATH/lib/pkgconfig
-    * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib --enable-test
+    * ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib --enable-test --enable-usb=no
     * make
     * sudo make install
     Note: we can use --disable-audio --enable-test to open or close some features in bluez4.95. For more details , see the configure in bluez4.95
@@ -64,4 +64,6 @@ Parpare:
 	export PKG_CONFIG_LIBDIR=$BLUEZ_INSTALL_PATH/lib/pkgconfig
 	* ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH CFLAGS=-I$BLUEZ_INSTALL_PATH/include LDFLAGS=-L$BLUEZ_INSTALL_PATH/lib
    b) hcidump
-
+        ./configure --prefix=$BLUEZ_INSTALL_PATH --host=arm-linux --target=arm-linux CC=$CROSS_CC_PATH
+	* make
+	* sudo make install
