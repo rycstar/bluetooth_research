@@ -1,0 +1,38 @@
+1. environment:
+  a) linux kernel 3.4.74
+  b) USB bluetooth dongle
+  c) bluez 4.95
+2. Bug decription
+  a) This is a accidental problem
+  b) the audio recv from usb dongle is distortion audio
+3. root cause
+  a) debug in btusb.c <linux/drivers/bluetooth/btusb.c>
+  b) dump the audio in func btusb_submit_isoc_urb  --> btusb_isoc_complete. we can see the audio (PCM16) is good if we delete a 
+  byte in the head. That means the data recv from usb dongle is one byte overflow.
+  c) Then we recv the data in sco socket, and begin to parse the pcm16 audio data, we will get a distortion voice.
+4. USB host driver only transfer the audio data, so that must be the problem of usb dongle, but we have no way to debug the usb dongle.
+5. resolution：
+   a) If we transfer the audio data in PCMA mode(one byte is a sample audio), this bug will be workaround fixed.(hciconfig hci0 voice 0x240)
+   b) Encode/decode PCM16 to PCMA between the audio driver and usb bluetooth driver. But in the test, bluetooth headset will hear another
+   type distortion voice. 
+   c) Dump the send audio in btusb.c(or use hcidump and the sco.lua in wireshark), we found that the audio we send is correct.
+   d) For a long time and a lot of try and try, we found that a kernel patch should be added for PCMA/PCMU/PCM8bit transfer.
+   c) This patch can be found in linux kernel 3.17, and I will append the main code below.
+   
+6. linux kernel main patch:
+   In function btusb_work in btusb.c:
+   
+    int new_alts = 2;
+    if (hdev->voice_setting & 0x0020) {
+			static const int alts[3] = { 2, 4, 5 };
+			new_alts = alts[data->sco_num - 1];
+		} else {
+			new_alts = data->sco_num;
+		}
+		if (data->isoc_altsetting != new_alts) {
+			clear_bit(BTUSB_ISOC_RUNNING, &data->flags);
+			usb_kill_anchored_urbs(&data->isoc_anchor);
+
+			if (__set_isoc_interface(hdev, new_alts) < 0)
+				return;
+		}
