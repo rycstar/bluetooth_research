@@ -11,7 +11,7 @@ DIR_SRC = ./src
 DIR_OBJ = ./obj
 DIR_BIN = ./bin
 
-DIR_BLUEZ = /home/fanvil/fanvil/bt_test/install
+DIR_BLUEZ = ~/bt_test/install
 
 SRC = $(wildcard $(DIR_SRC)/*.c)
 OBJ = $(patsubst %.c,$(DIR_OBJ)/%.o,$(notdir $(SRC)))
@@ -27,7 +27,7 @@ TARGET = BLUEZ_TEST
 BIN_TARGET = $(DIR_BIN)/$(TARGET)
 
 CFLAGS = -g -Wall $(INC_FLAGS)
-CC = /opt/arm-2009q1/bin/arm-none-linux-gnueabi-gcc
+CC = /*/*/arm-none-linux-gnueabi-gcc
 
 $(BIN_TARGET):$(OBJ)
 	$(CC) $(OBJ) -o $@ $(LDFLAGS)
