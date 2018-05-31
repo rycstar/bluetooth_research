@@ -1,0 +1,19 @@
+Sometimes you may see a lot of kernel print like "hci0 sco packet for unknown connection handle 0x00",
+For a few seconds, it disappeared.
+This kernel log will take a lot of CPU, and kernel will run slowly.
+If we use PCMA codec to transfer data between kernel and bluetooth USB dongle, sometimes this log will print for a long time,then, kernel seems
+to be dead.
+
+The reason for this problem is that the data received from USB dongle is wrong at the begining.
+
+The format of sco data received from bluetooth usb driver is below:
+
+|sco handle value(2 bytes) | audio data length(1 bytes)|audio data (length bytes) |
+
+and usb driver will first get the first 3 byte data, then try to get the audio data, then a frame is generated.
+The frame will be sent to hci_rx_work ,at last send to the sco socket.
+But sometimes the audio data sent by usb dongle is not correct at the begining,then the frames will be wrong until it a correct frame generated.
+
+This bug haven't be fixed in kernel 4.x
+A workaround method based on sco mtu can fix this problem.(this is dangerous if you app need to change the sco mtu and you don't update the value in kernel)
+if the "audio data length" is not equal to sco mtu, we try to find the next correct value, and drop the wrong data.
