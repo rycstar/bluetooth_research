@@ -5,3 +5,4 @@ To fix this bug, please refer to the below link:
 https://github.com/rwg0/linux/commit/837e00505542e25c253ecffd93b35776f9079582
 
 The reason is that "chan->global_l" maybe deleted twice if we don't use "refcnt" to protect it.
+This bug is fixed after Kernel 3.7.x.
