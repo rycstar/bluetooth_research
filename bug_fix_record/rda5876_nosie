@@ -1,0 +1,124 @@
+Environment:
+    CPU : BCM9111XXSV
+    Bluetooth chip:RDA5876 (Uart+Pcm)
+Issue:
+    A lot of noise(around -36db level) will occur int a call.
+    Especially in the "remote mute mode", we can hear the noise in the bluetooth headset.
+Debug:
+    1) the noise like a ana noise, this may be a hardware issue.
+    2) with a lot of hardware test(disconnect pcm and etc...), the noise still exist.
+    3) We found a product named T52s has the same cpu and bluetooth chip. And the noise of T52s is small and less.
+    4) We connect bluetooth uart tx/rx of T52s to a serial, then connected to PC, then download the uart config(BLUETOOTH chip init config) from T52s
+    5) We write a parse code to analysis the config data, and config the same data into our product. The noise become small and less also!
+    6) finally we found the important reg is {0x800004ec,0xfa8dfbff}. we change the value from 0x7a8dfbff to 0xfa8dfbff
+    
+Following code is the reg paser code:
+ 
+#include <stdio.h>
+#include <fcntl.h>
+#include <string.h>
+
+#define MAX_VAL_LEN 16
+int print_rda_cmd(char * src_name){
+	int file = 0, rlen = 0 ,i = 0;
+	unsigned char header[4] = {0},next_len = 0;
+	unsigned char val[MAX_VAL_LEN] = {0};
+	unsigned int reg,reg_val;
+	file = open(src_name,O_RDONLY);
+	if(file < 0){
+		printf("open file <%s> fail...\n", src_name);
+		return -1;
+	}
+
+	while((rlen = read(file, header, sizeof(header))) > 0){
+		if(rlen != sizeof(header)){
+			printf("----read header error----\n");
+			break;
+		}
+		next_len = header[3];
+
+		if(next_len <= MAX_VAL_LEN){
+			if(read(file, val, next_len) == next_len){
+
+				if(header[0] == 0x01 && header[1] == 0x02 && header[2] == 0xfd){
+					if(next_len == 0x0a){
+						reg = (val[5] << 24) | (val[4] << 16) | (val[3] << 8) | (val[2]);
+						reg_val = (val[9] << 24) | (val[8] << 16) | (val[7] << 8) | (val[6]);
+						if(val[0] == 0x01 || val[0] == 0x81){
+							reg = (reg - 0x200) >> 2;
+						}
+						printf("{0x%08x,0x%08x}\n",reg,reg_val);
+					}
+				}else if(header[0] == 0x01 && header[1] == 0x1A && header[2] == 0x0c){
+						printf("raw data: 0x%02x,0x%02x,0x%02x,0x%02x",header[0],header[1],header[2],header[3]);
+						for(i = 0; i < next_len; i++) printf(",0x%02x",val[i]);
+						printf("\n");
+				}else if(header[0] == 0x01 && header[1] == 0x05 && header[2] == 0x0c){
+						printf("raw data: 0x%02x,0x%02x,0x%02x,0x%02x",header[0],header[1],header[2],header[3]);
+						for(i = 0; i < next_len; i++) printf(",0x%02x",val[i]);
+						printf("\n");
+				}else if(header[0] == 0x01 && header[1] == 0x1A && header[2] == 0xfc){
+						printf("raw data: 0x%02x,0x%02x,0x%02x,0x%02x",header[0],header[1],header[2],header[3]);
+						for(i = 0; i < next_len; i++) printf(",0x%02x",val[i]);
+						printf("\n");
+				}else{
+					printf("---- header format error--^_^--\n");
+					printf("raw data: 0x%02x,0x%02x,0x%02x,0x%02x\n",header[0],header[1],header[2],header[3]);
+					break;
+				}
+
+			}else{
+				printf("---- value read error----\n");
+				break;	
+			}
+
+		}else{
+			printf("---- buffer len overflow----\n");
+			break;
+		}
+	}
+
+	close(file);
+	return 0;
+}
+
+int txt2hex(char * src_name, char * dst_name, int len){
+	FILE * p = NULL;
+	unsigned char val = 0;
+	int w_file = 0, r_len = 0;
+	char *readbuf = NULL, *tmp = NULL ;
+	p = fopen(src_name,"r");
+	if(p == NULL){
+		printf("open file <%s> fail...\n", src_name);
+		return -1;
+	}
+	snprintf(dst_name,len,"%s_hex",src_name);
+	w_file = open(dst_name,O_CREAT|O_RDWR, 0777);
+	if(w_file < 0){
+		printf("open file <%s> fail...\n", dst_name);
+		return -1;
+	}
+
+	readbuf = (char*)calloc(1,50*1024);
+	r_len = fread(readbuf,1,50*1024,p);
+	if(r_len > 0){
+		tmp = strtok(readbuf," ");
+		while(tmp){
+			val = strtoul(tmp,NULL,16);
+			write(w_file,&val,1);
+			tmp = strtok(NULL," ");
+		}
+	}
+	free(readbuf);
+	close(w_file);
+	fclose(p);
+	return 0;
+}
+
+int main(int argc, char * argv[]){
+	char name[128] = {0};
+	txt2hex(argv[1], name , sizeof(name));
+	sleep(1);
+	return print_rda_cmd(name);
+}
+    
