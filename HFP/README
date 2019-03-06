@@ -3,7 +3,9 @@ or https://github.com/heinervdm/nohands
 
 
 1)nohands hfp is no related to bluetoothd !!!!
+  -----I'm wrong, bluetoothd is must, nohands need the sdp services in bluetoothd...
 2)It use the lower HCI api to contact with kernel.
+  -----This opreation may error on ubuntu system as bluetoothd is doing the same thing at the same time...
 
 ------------------------------[python GUI]--------------------------------
                                    ||
