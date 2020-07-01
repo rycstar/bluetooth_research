@@ -44,11 +44,15 @@
       b)  If devices connected or status changed, Bluedroid stack will call JNI method to notify Bluetooth service 
       
       c)  Sony player is done in system/bt which is not included in bluetooth.apk, bluedroid stack created a audiotrack and play the decoded data.
-      you can find it in file btif_a2dp_sink.cc and btif_avrcp_audio_track.cc
+      you can find it in file btif_a2dp_sink.cc and btif_avrcp_audio_track.cc.
       
-      ------------------------------------------------framework layer API for applications-------------------------------------------------                    
-                         BluetoothA2dpSink.java                                      BluetoothAvrcpController.java   
-      -------------------------------------------------------------------------------------------------------------------------------------
+      
+          -------------------------------------framework layer API for applications--------------------------------------------    
+          |                                                                                                                   |
+          |               BluetoothA2dpSink.java                                      BluetoothAvrcpController.java           |
+          |                                                                                                                   |
+          ----------------------------------------------------------------------------------------------------------------------
+      
           --------------------------------------------Bluetooth service in bluetooth.apk--------------------------------------------
           |               A2dpSinkService.java                    |                   A2dpMediaBrowserSevice.java                   |
           |                                                       |                                                                 |
