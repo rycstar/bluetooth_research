@@ -1,2 +1,9 @@
-reference to below link:
+There are two way to get A2DP audio data on Bluez.
+One is "Socket", One is "org.bluez.MediaTransport"
+You can config it in "audio.conf"
+
+For "org.bluez.MediaTransport" interface,  reference to below link:
+
 1. https://www.lightofdawn.org/blog/?viewDetailed=00032
+
+For "Socket" interface, reference to "audio/unix.c" in Bluez tarball and "pcm_bluetooth.c"
