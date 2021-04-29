@@ -6,4 +6,4 @@ For "org.bluez.MediaTransport" interface,  reference to below link:
 
 1. https://www.lightofdawn.org/blog/?viewDetailed=00032
 
-For "Socket" interface, reference to "audio/unix.c" in Bluez tarball and "pcm_bluetooth.c"
+For "Socket" interface, reference to "audio/unix.c" and "pcm_bluetooth.c" in Bluez tarball
